@@ -4,8 +4,6 @@ import (
 	"time"
 
 	"github.com/uptrace/bun"
-
-	"github.com/lwmacct/260630-go-hsr-auth/internal/infra/dbschema"
 )
 
 type UserModel struct {
@@ -22,8 +20,4 @@ type UserModel struct {
 	LastLoginAt *time.Time `bun:"last_login_at,nullzero"`
 	CreatedAt   time.Time  `bun:"created_at,notnull"`
 	UpdatedAt   time.Time  `bun:"updated_at,notnull"`
-}
-
-func UserSchema() dbschema.Schema {
-	return dbschema.Schema{Models: []any{(*UserModel)(nil)}}
 }

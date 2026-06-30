@@ -3,17 +3,16 @@ package auth
 import (
 	"context"
 
-	"github.com/lwmacct/260630-go-hsr-auth/internal/handler"
 	"github.com/lwmacct/260630-go-hsr-auth/internal/service"
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/requestctx"
 )
 
 func ContextWithRequest(ctx context.Context, request SessionRequest) context.Context {
-	return handler.ContextWithRequest(ctx, toServiceSessionRequest(request))
+	return requestctx.ContextWithRequest(ctx, request)
 }
 
 func RequestFromContext(ctx context.Context) (SessionRequest, bool) {
-	request, ok := handler.RequestFromContext(ctx)
-	return fromServiceSessionRequest(request), ok
+	return requestctx.RequestFromContext(ctx)
 }
 
 func toServiceSessionRequest(value SessionRequest) service.AuthSessionInput {

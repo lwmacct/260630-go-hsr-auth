@@ -1,12 +1,12 @@
 # go-hsr-auth
 
-Reusable auth module plus an example HTTP server.
+Reusable HSR auth feature module.
 
 ## Layout
 
 - `pkg/auth`: public library API for other projects.
 - `internal/repository`, `internal/service`, `internal/handler`: private auth implementation.
-- `internal/appcmd/server`: example server wiring for config, database, TLS, and HTTP serving.
+- Runtime concerns such as database opening, request context middleware, HTTP server wiring, and schema helpers live in `github.com/lwmacct/260630-go-hsr-shared`.
 
 ## Checks
 

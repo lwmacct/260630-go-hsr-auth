@@ -3,6 +3,8 @@ package auth
 import (
 	"context"
 	"time"
+
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/requestctx"
 )
 
 const (
@@ -67,14 +69,7 @@ type Options struct {
 
 type RequestFunc func(context.Context) (SessionRequest, bool)
 
-type SessionRequest struct {
-	IP         string
-	Host       string
-	UserAgent  string
-	Method     string
-	Path       string
-	RemoteAddr string
-}
+type SessionRequest = requestctx.Request
 
 type ChallengeProvider interface {
 	Name() string

@@ -5,8 +5,6 @@ import (
 	"time"
 
 	"github.com/uptrace/bun"
-
-	"github.com/lwmacct/260630-go-hsr-auth/internal/infra/dbschema"
 )
 
 type AuthOauthAccountModel struct {
@@ -28,8 +26,4 @@ type AuthOauthAccountModel struct {
 func (*AuthOauthAccountModel) BeforeCreateTable(_ context.Context, query *bun.CreateTableQuery) error {
 	query.ForeignKey("(user_id) REFERENCES users (id) ON DELETE CASCADE")
 	return nil
-}
-
-func AuthOauthAccountSchema() dbschema.Schema {
-	return dbschema.Schema{Models: []any{(*AuthOauthAccountModel)(nil)}}
 }
