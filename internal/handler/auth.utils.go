@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"net/url"
-	"strings"
 	"time"
 
 	"github.com/danielgtaylor/huma/v2"
@@ -24,50 +22,6 @@ func utilRegisterErrorMessage(err error) string {
 	default:
 		return "register failed"
 	}
-}
-
-func utilOAuthRedirectURI(config Config, request service.AuthSessionInput, provider string) string {
-	base := strings.TrimRight(config.OAuthCallbackBaseURL, "/")
-	if base == "" {
-		scheme := request.Scheme
-		if scheme == "" {
-			scheme = "http"
-		}
-		host := request.Host
-		if host == "" {
-			host = request.RemoteAddr
-		}
-		base = scheme + "://" + host
-	}
-	values := url.Values{}
-	values.Set("provider", provider)
-	return base + "/api/auth/oauth/callback?" + values.Encode()
-}
-
-func utilSanitizeReturnTo(value string) string {
-	value = strings.TrimSpace(value)
-	if value == "" {
-		return "/#/console"
-	}
-	if strings.HasPrefix(value, "#/") {
-		return "/" + value
-	}
-	if strings.HasPrefix(value, "/#/") || strings.HasPrefix(value, "/") && !strings.HasPrefix(value, "//") {
-		return value
-	}
-	return "/#/console"
-}
-
-func utilOAuthUsername(profile service.AuthOauthAccountProfile) string {
-	if profile.ProviderEmail != "" {
-		if name, _, ok := strings.Cut(profile.ProviderEmail, "@"); ok {
-			return name
-		}
-	}
-	if profile.ProviderDisplayName != "" {
-		return profile.ProviderDisplayName
-	}
-	return profile.Provider + "-" + profile.Subject
 }
 
 func utilRequest(ctx context.Context, config Config) (service.AuthSessionInput, error) {

@@ -25,17 +25,10 @@ const (
 	ChallengeProviderTurnstile = challenge.ProviderTurnstile
 )
 
-const (
-	OAuthProviderGitHub = "github"
-	OAuthProviderGoogle = "google"
-)
-
 type Config struct {
 	Local             LocalConfig
-	OAuth             OAuthConfig
 	Session           SessionConfig
 	RuntimeAdmins     []string
-	OAuthProvider     func(string) (OAuthProvider, error)
 	ChallengeProvider ChallengeProvider
 	Request           RequestFunc
 }
@@ -43,18 +36,6 @@ type Config struct {
 type LocalConfig struct {
 	LoginEnabled        bool
 	RegistrationEnabled bool
-}
-
-type OAuthConfig struct {
-	Enabled         bool
-	AutoRegister    bool
-	CallbackBaseURL string
-	Providers       []OAuthProviderConfig
-}
-
-type OAuthProviderConfig struct {
-	Provider string
-	Label    string
 }
 
 type SessionConfig struct {
@@ -72,7 +53,6 @@ type Options struct {
 	DB         DB
 	Config     Config
 	SessionTTL time.Duration
-	OAuthTTL   time.Duration
 }
 
 type RequestFunc func(context.Context) (SessionRequest, bool)
@@ -89,18 +69,31 @@ type Challenge = challenge.Challenge
 
 type ChallengeAnswer = challenge.Answer
 
-type OAuthProvider interface {
-	Name() string
-	AuthorizationURL(state string, redirectURI string, codeVerifier string, nonce string) string
-	ExchangeProfile(ctx context.Context, code string, redirectURI string, codeVerifier string) (OAuthProfile, error)
+type User struct {
+	ID          int64
+	Username    string
+	DisplayName string
+	Email       string
+	AvatarURL   string
+	Role        string
+	Status      string
+	Admin       bool
+	DisabledAt  *time.Time
+	LastLoginAt *time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
-type OAuthProfile struct {
-	Provider              string
-	Subject               string
-	ProviderEmail         string
-	ProviderEmailVerified bool
-	ProviderDisplayName   string
-	ProviderAvatarURL     string
-	ProviderProfile       string
+type Session struct {
+	ID        string
+	ExpiresAt time.Time
+	SetCookie string
+	User      *User
+}
+
+type ExternalUserInput struct {
+	Username    string
+	DisplayName string
+	Email       string
+	AvatarURL   string
 }

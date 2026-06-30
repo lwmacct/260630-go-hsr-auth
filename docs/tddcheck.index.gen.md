@@ -21,8 +21,6 @@
 | `GET`    | `/auth/config`                | `get-auth-config`           | Auth  | `configOutput`      | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
 | `POST`   | `/auth/logout`                | `logout`                    | Auth  | `logout`            | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
 | `GET`    | `/auth/me`                    | `get-current-user`          | Auth  | `me`                | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `GET`    | `/auth/oauth/callback`        | `complete-oauth-login`      | Auth  | `oauthCallback`     | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `GET`    | `/auth/oauth/start`           | `start-oauth-login`         | Auth  | `oauthStart`        | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
 | `POST`   | `/auth/password/change`       | `change-password`           | Auth  | `passwordChange`    | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
 | `POST`   | `/auth/password/login`        | `login-password`            | Auth  | `passwordLogin`     | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
 | `POST`   | `/auth/password/register`     | `register-password-user`    | Auth  | `passwordRegister`  | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
@@ -30,83 +28,35 @@
 
 ## Handlers
 
-| Scope        | Handler            | Register            | File                                     | Methods                                                                                                                                                                                                                                                                 |
-| ------------ | ------------------ | ------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `admin_user` | `adminUserHandler` | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` | batchUserPassword, batchUserRole, batchUserStatus, createUser, deleteUsers, listUsers, requireAdmin, updateUser                                                                                                                                                         |
-| `auth`       | `authHandler`      | `RegisterAuth`      | `internal/handler/auth.handler.go`       | configOutput, createChallenge, createSessionResponse, currentUser, enabledOAuthProviders, isRuntimeAdmin, isRuntimeAdminUsername, logout, me, oauthCallback, oauthProvider, oauthStart, passwordChange, passwordLogin, passwordRegister, toAuthUserDTO, verifyChallenge |
+| Scope        | Handler            | Register            | File                                     | Methods                                                                                                                                                                                                |
+| ------------ | ------------------ | ------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `admin_user` | `adminUserHandler` | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` | batchUserPassword, batchUserRole, batchUserStatus, createUser, deleteUsers, listUsers, requireAdmin, updateUser                                                                                        |
+| `auth`       | `authHandler`      | `RegisterAuth`      | `internal/handler/auth.handler.go`       | configOutput, createChallenge, createSessionResponse, currentUser, isRuntimeAdmin, isRuntimeAdminUsername, logout, me, passwordChange, passwordLogin, passwordRegister, toAuthUserDTO, verifyChallenge |
 
 ## Services
 
-| Service                   | Scope                | File                                             | Constructor                  | Dependencies                                                                  | Methods                                                                                                                                             |
-| ------------------------- | -------------------- | ------------------------------------------------ | ---------------------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AdminUserService`        | `admin_user`         | `internal/service/admin_user.service.go`         | `NewAdminUserService`        | AuthOauthAccountService, AuthPasswordService, AuthSessionService, UserService | Create, DeleteBatch, List, ResetPasswordBatch, SetRoleBatch, SetStatusBatch, UpdateProfile                                                          |
-| `AuthOauthAccountService` | `auth_oauth_account` | `internal/service/auth_oauth_account.service.go` | `NewAuthOauthAccountService` |                                                                               | ByProviderSubject, Create, DeleteForUsers, ResolveUser                                                                                              |
-| `AuthOauthFlowService`    | `auth_oauth_flow`    | `internal/service/auth_oauth_flow.service.go`    | `NewAuthOauthFlowService`    |                                                                               | Cleanup, Consume, Create                                                                                                                            |
-| `AuthPasswordService`     | `auth_password`      | `internal/service/auth_password.service.go`      | `NewAuthPasswordService`     |                                                                               | Authenticate, Change, CheckStrength, DeleteForUsers, Register, Reset, Set                                                                           |
-| `AuthSessionService`      | `auth_session`       | `internal/service/auth_session.service.go`       | `NewAuthSessionService`      |                                                                               | Create, Delete, DeleteForUsers, RevokeForUsers, User                                                                                                |
-| `UserService`             | `user`               | `internal/service/user.service.go`               | `NewUserService`             |                                                                               | ByID, ByUsername, Create, CreateWithUniqueUsername, DeleteBatch, EnsureActive, List, MarkLogin, Search, SetRoleBatch, SetStatusBatch, UpdateProfile |
+| Service               | Scope           | File                                        | Constructor              | Dependencies                                         | Methods                                                                                                                                             |
+| --------------------- | --------------- | ------------------------------------------- | ------------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AdminUserService`    | `admin_user`    | `internal/service/admin_user.service.go`    | `NewAdminUserService`    | AuthPasswordService, AuthSessionService, UserService | Create, DeleteBatch, List, ResetPasswordBatch, SetRoleBatch, SetStatusBatch, UpdateProfile                                                          |
+| `AuthPasswordService` | `auth_password` | `internal/service/auth_password.service.go` | `NewAuthPasswordService` |                                                      | Authenticate, Change, CheckStrength, DeleteForUsers, Register, Reset, Set                                                                           |
+| `AuthSessionService`  | `auth_session`  | `internal/service/auth_session.service.go`  | `NewAuthSessionService`  |                                                      | Create, Delete, DeleteForUsers, RevokeForUsers, User                                                                                                |
+| `UserService`         | `user`          | `internal/service/user.service.go`          | `NewUserService`         |                                                      | ByID, ByUsername, Create, CreateWithUniqueUsername, DeleteBatch, EnsureActive, List, MarkLogin, Search, SetRoleBatch, SetStatusBatch, UpdateProfile |
 
 ## Stores
 
-| Scope                | File                                              | Methods                                                                                                                                                                                               |
-| -------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `auth_oauth_account` | `internal/repository/auth_oauth_account.store.go` | CreateAuthOauthAccount, DeleteAuthOauthAccountForUsers, FetchAuthOauthAccountByProviderSubject                                                                                                        |
-| `auth_oauth_flow`    | `internal/repository/auth_oauth_flow.store.go`    | CreateAuthOauthFlow, DeleteAuthOauthFlow, DeleteAuthOauthFlowExpired, FetchAuthOauthFlow                                                                                                              |
-| `auth_password`      | `internal/repository/auth_password.store.go`      | CreateAuthPassword, DeleteAuthPasswordForUsers, FetchAuthPassword, UpdateAuthPassword, UpsertAuthPassword                                                                                             |
-| `auth_session`       | `internal/repository/auth_session.store.go`       | CreateAuthSession, DeleteAuthSession, DeleteAuthSessionForUsers, FetchAuthSession, UpdateAuthSessionRevokedForUsers, UpdateAuthSessionTouch                                                           |
-| `user`               | `internal/repository/user.store.go`               | CreateUser, DeleteUserBatch, FetchUser, FetchUserByUsername, FetchUserTotalByFilter, ListUsers, ListUsersByFilter, UpdateUserLastLogin, UpdateUserProfile, UpdateUserRoleBatch, UpdateUserStatusBatch |
+| Scope           | File                                         | Methods                                                                                                                                                                                               |
+| --------------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `auth_password` | `internal/repository/auth_password.store.go` | CreateAuthPassword, DeleteAuthPasswordForUsers, FetchAuthPassword, UpdateAuthPassword, UpsertAuthPassword                                                                                             |
+| `auth_session`  | `internal/repository/auth_session.store.go`  | CreateAuthSession, DeleteAuthSession, DeleteAuthSessionForUsers, FetchAuthSession, UpdateAuthSessionRevokedForUsers, UpdateAuthSessionTouch                                                           |
+| `user`          | `internal/repository/user.store.go`          | CreateUser, DeleteUserBatch, FetchUser, FetchUserByUsername, FetchUserTotalByFilter, ListUsers, ListUsersByFilter, UpdateUserLastLogin, UpdateUserProfile, UpdateUserRoleBatch, UpdateUserStatusBatch |
 
 ## Tables
 
-| Table                 | Model                   | Scope                | File                                               | Alias | Fields | Foreign Keys |
-| --------------------- | ----------------------- | -------------------- | -------------------------------------------------- | ----- | ------ | ------------ |
-| `auth_oauth_accounts` | `AuthOauthAccountModel` | `auth_oauth_account` | `internal/repository/auth_oauth_account.schema.go` | `aoa` | 11     | 1            |
-| `auth_oauth_flows`    | `AuthOauthFlowModel`    | `auth_oauth_flow`    | `internal/repository/auth_oauth_flow.schema.go`    | `aof` | 7      | 0            |
-| `auth_passwords`      | `AuthPasswordModel`     | `auth_password`      | `internal/repository/auth_password.schema.go`      | `ap`  | 5      | 1            |
-| `auth_sessions`       | `AuthSessionModel`      | `auth_session`       | `internal/repository/auth_session.schema.go`       | `as`  | 9      | 1            |
-| `users`               | `UserModel`             | `user`               | `internal/repository/user.schema.go`               | `u`   | 11     | 0            |
-
-### `auth_oauth_accounts`
-
-- Model: `AuthOauthAccountModel`
-- Scope: `auth_oauth_account`
-- File: `internal/repository/auth_oauth_account.schema.go`
-- Alias: `aoa`
-
-| Field                   | Column                    | Go Type     | Attributes                         |
-| ----------------------- | ------------------------- | ----------- | ---------------------------------- |
-| `ID`                    | `id`                      | `int64`     | [pk, autoincrement]                |
-| `UserID`                | `user_id`                 | `int64`     | [notnull]                          |
-| `Provider`              | `provider`                | `string`    | [notnull, unique:provider_subject] |
-| `Subject`               | `subject`                 | `string`    | [notnull, unique:provider_subject] |
-| `ProviderEmail`         | `provider_email`          | `string`    | [nullable]                         |
-| `ProviderEmailVerified` | `provider_email_verified` | `bool`      | [notnull]                          |
-| `ProviderDisplayName`   | `provider_display_name`   | `string`    | [nullable]                         |
-| `ProviderAvatarURL`     | `provider_avatar_url`     | `string`    | [nullable]                         |
-| `ProviderProfile`       | `provider_profile_json`   | `string`    | [nullable]                         |
-| `CreatedAt`             | `created_at`              | `time.Time` | [notnull]                          |
-| `UpdatedAt`             | `updated_at`              | `time.Time` | [notnull]                          |
-
-Foreign keys:
-
-- `(user_id) REFERENCES users (id) ON DELETE CASCADE`
-
-### `auth_oauth_flows`
-
-- Model: `AuthOauthFlowModel`
-- Scope: `auth_oauth_flow`
-- File: `internal/repository/auth_oauth_flow.schema.go`
-- Alias: `aof`
-
-| Field              | Column               | Go Type     | Attributes |
-| ------------------ | -------------------- | ----------- | ---------- |
-| `StateHash`        | `state_hash`         | `[]byte`    | [pk]       |
-| `Provider`         | `provider`           | `string`    | [notnull]  |
-| `PKCECodeVerifier` | `pkce_code_verifier` | `string`    | [notnull]  |
-| `Nonce`            | `nonce`              | `string`    | [nullable] |
-| `ReturnTo`         | `return_to`          | `string`    | [nullable] |
-| `ExpiresAt`        | `expires_at`         | `time.Time` | [notnull]  |
-| `CreatedAt`        | `created_at`         | `time.Time` | [notnull]  |
+| Table            | Model               | Scope           | File                                          | Alias | Fields | Foreign Keys |
+| ---------------- | ------------------- | --------------- | --------------------------------------------- | ----- | ------ | ------------ |
+| `auth_passwords` | `AuthPasswordModel` | `auth_password` | `internal/repository/auth_password.schema.go` | `ap`  | 5      | 1            |
+| `auth_sessions`  | `AuthSessionModel`  | `auth_session`  | `internal/repository/auth_session.schema.go`  | `as`  | 9      | 1            |
+| `users`          | `UserModel`         | `user`          | `internal/repository/user.schema.go`          | `u`   | 11     | 0            |
 
 ### `auth_passwords`
 

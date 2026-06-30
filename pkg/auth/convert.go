@@ -2,6 +2,8 @@ package auth
 
 import (
 	"context"
+	"net/http"
+	"time"
 
 	"github.com/lwmacct/260630-go-hsr-auth/internal/service"
 	"github.com/lwmacct/260630-go-hsr-shared/pkg/requestctx"
@@ -27,26 +29,16 @@ func toServiceSessionRequest(value SessionRequest) service.AuthSessionInput {
 	}
 }
 
-func toServiceOAuthProfile(value OAuthProfile) service.AuthOauthAccountProfile {
-	return service.AuthOauthAccountProfile{
-		Provider:              value.Provider,
-		Subject:               value.Subject,
-		ProviderEmail:         value.ProviderEmail,
-		ProviderEmailVerified: value.ProviderEmailVerified,
-		ProviderDisplayName:   value.ProviderDisplayName,
-		ProviderAvatarURL:     value.ProviderAvatarURL,
-		ProviderProfile:       value.ProviderProfile,
-	}
-}
-
-func fromServiceOAuthProfile(value service.AuthOauthAccountProfile) OAuthProfile {
-	return OAuthProfile{
-		Provider:              value.Provider,
-		Subject:               value.Subject,
-		ProviderEmail:         value.ProviderEmail,
-		ProviderEmailVerified: value.ProviderEmailVerified,
-		ProviderDisplayName:   value.ProviderDisplayName,
-		ProviderAvatarURL:     value.ProviderAvatarURL,
-		ProviderProfile:       value.ProviderProfile,
-	}
+func sessionCookieValue(value string, expiresAt time.Time, config SessionCookieConfig) string {
+	//nolint:gosec // Secure is an application cookie policy; local HTTP development intentionally uses insecure cookies.
+	return (&http.Cookie{
+		Name:     config.Name,
+		Value:    value,
+		Path:     config.Path,
+		Expires:  expiresAt,
+		MaxAge:   int(time.Until(expiresAt).Seconds()),
+		HttpOnly: true,
+		Secure:   config.Secure,
+		SameSite: config.SameSite,
+	}).String()
 }

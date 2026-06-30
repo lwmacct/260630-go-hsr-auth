@@ -25,8 +25,6 @@ func RegisterAuth(api huma.API, config Config, services Services) {
 	huma.Register(auth, huma.Operation{OperationID: "register-password-user", Method: http.MethodPost, Path: "/password/register", DefaultStatus: http.StatusCreated, Tags: []string{"Auth"}}, handler.passwordRegister)
 	huma.Register(auth, huma.Operation{OperationID: "login-password", Method: http.MethodPost, Path: "/password/login", Tags: []string{"Auth"}}, handler.passwordLogin)
 	huma.Register(auth, huma.Operation{OperationID: "change-password", Method: http.MethodPost, Path: "/password/change", Tags: []string{"Auth"}}, handler.passwordChange)
-	huma.Register(auth, huma.Operation{OperationID: "start-oauth-login", Method: http.MethodGet, Path: "/oauth/start", DefaultStatus: http.StatusFound, Tags: []string{"Auth"}}, handler.oauthStart)
-	huma.Register(auth, huma.Operation{OperationID: "complete-oauth-login", Method: http.MethodGet, Path: "/oauth/callback", DefaultStatus: http.StatusFound, Tags: []string{"Auth"}}, handler.oauthCallback)
 	huma.Register(auth, huma.Operation{OperationID: "logout", Method: http.MethodPost, Path: "/logout", Tags: []string{"Auth"}}, handler.logout)
 	huma.Register(auth, huma.Operation{OperationID: "get-current-user", Method: http.MethodGet, Path: "/me", Tags: []string{"Auth"}}, handler.me)
 }
@@ -36,22 +34,9 @@ func (h authHandler) configOutput(_ context.Context, _ *struct{}) (*BodyDTO[Auth
 	body := AuthConfigDTO{}
 	body.Local.LoginEnabled = h.config.LocalLoginEnabled
 	body.Local.RegistrationEnabled = h.config.LocalRegistrationEnabled
-	body.OAuth.Enabled = h.config.OAuthEnabled
-	body.OAuth.Providers = h.enabledOAuthProviders()
 	body.Challenge.Provider = challenge.Provider
 	body.Challenge.SiteKey = challenge.SiteKey
 	return &BodyDTO[AuthConfigDTO]{Body: body}, nil
-}
-
-func (h authHandler) enabledOAuthProviders() []AuthProviderDTO {
-	if !h.config.OAuthEnabled {
-		return nil
-	}
-	providers := make([]AuthProviderDTO, 0, len(h.config.OAuthProviders))
-	for _, provider := range h.config.OAuthProviders {
-		providers = append(providers, AuthProviderDTO(provider))
-	}
-	return providers
 }
 
 func (h authHandler) createChallenge(ctx context.Context, _ *struct{}) (*BodyDTO[AuthChallengeCreateDTO], error) {
@@ -146,68 +131,6 @@ func (h authHandler) passwordChange(ctx context.Context, input *AuthPasswordChan
 		ExpiresAt:     sessionUser.ExpiresAt,
 		User:          h.toAuthUserDTO(user),
 	}}, nil
-}
-
-func (h authHandler) oauthStart(ctx context.Context, input *AuthOAuthStartInputDTO) (*AuthOAuthRedirectResponseDTO, error) {
-	provider, err := h.oauthProvider(input.Provider)
-	if err != nil {
-		return nil, huma.Error404NotFound("oauth provider unavailable")
-	}
-	request, err := utilRequest(ctx, h.config)
-	if err != nil {
-		return nil, err
-	}
-	returnTo := utilSanitizeReturnTo(input.ReturnTo)
-	state, flow, err := h.services.OAuthFlows.Create(ctx, provider.Name(), returnTo)
-	if err != nil {
-		return nil, huma.Error500InternalServerError("internal server error")
-	}
-	redirectURI := utilOAuthRedirectURI(h.config, request, provider.Name())
-	return &AuthOAuthRedirectResponseDTO{
-		Location: provider.AuthorizationURL(state, redirectURI, flow.PKCECodeVerifier, flow.Nonce),
-	}, nil
-}
-
-func (h authHandler) oauthCallback(ctx context.Context, input *AuthOAuthCallbackInputDTO) (*AuthOAuthRedirectResponseDTO, error) {
-	provider, err := h.oauthProvider(input.Provider)
-	if err != nil {
-		return nil, huma.Error404NotFound("oauth provider unavailable")
-	}
-	request, err := utilRequest(ctx, h.config)
-	if err != nil {
-		return nil, err
-	}
-	flow, err := h.services.OAuthFlows.Consume(ctx, input.State)
-	if err != nil || flow.Provider != provider.Name() {
-		return nil, huma.Error401Unauthorized("invalid oauth state")
-	}
-	redirectURI := utilOAuthRedirectURI(h.config, request, provider.Name())
-	profile, err := provider.ExchangeProfile(ctx, input.Code, redirectURI, flow.PKCECodeVerifier)
-	if err != nil {
-		return nil, huma.Error401Unauthorized("oauth exchange failed")
-	}
-	user, err := h.services.OAuthAccounts.ResolveUser(ctx, service.AuthOauthAccountResolveInput{
-		Profile:      profile,
-		AutoRegister: h.config.OAuthAutoRegister,
-		Username:     utilOAuthUsername(profile),
-	})
-	if err != nil {
-		if errors.Is(err, service.ErrAuthOauthAccountRegistrationDisabled) {
-			return nil, huma.Error403Forbidden("oauth registration disabled")
-		}
-		if errors.Is(err, service.ErrUserDisabled) {
-			return nil, huma.Error403Forbidden("user disabled")
-		}
-		return nil, huma.Error500InternalServerError("internal server error")
-	}
-	response, err := h.createSessionResponse(ctx, user.ID, request)
-	if err != nil {
-		return nil, err
-	}
-	return &AuthOAuthRedirectResponseDTO{
-		Location:  utilSanitizeReturnTo(flow.ReturnTo),
-		SetCookie: response.SetCookie,
-	}, nil
 }
 
 func (h authHandler) logout(ctx context.Context, input *AuthLogoutInputDTO) (*AuthSessionResponseDTO, error) {
@@ -307,11 +230,4 @@ func (h authHandler) currentUser(ctx context.Context, sessionID string) (*AuthUs
 		return nil, err
 	}
 	return h.toAuthUserDTO(user), nil
-}
-
-func (h authHandler) oauthProvider(provider string) (OAuthProviderAuth, error) {
-	if !h.config.OAuthEnabled || h.config.OAuthProvider == nil {
-		return nil, errors.New("oauth disabled")
-	}
-	return h.config.OAuthProvider(strings.ToLower(strings.TrimSpace(provider)))
 }

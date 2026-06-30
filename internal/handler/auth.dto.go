@@ -7,19 +7,10 @@ type AuthConfigDTO struct {
 		LoginEnabled        bool `json:"loginEnabled"`
 		RegistrationEnabled bool `json:"registrationEnabled"`
 	} `json:"local"`
-	OAuth struct {
-		Enabled   bool              `json:"enabled"`
-		Providers []AuthProviderDTO `json:"providers"`
-	} `json:"oauth"`
 	Challenge struct {
 		Provider string `json:"provider"`
 		SiteKey  string `json:"sitekey,omitempty"`
 	} `json:"challenge"`
-}
-
-type AuthProviderDTO struct {
-	Provider string `json:"provider"`
-	Label    string `json:"label"`
 }
 
 type AuthChallengeCreateDTO struct {
@@ -75,20 +66,4 @@ type AuthLogoutInputDTO struct {
 type AuthPasswordChangeInputDTO struct {
 	Session string `cookie:"web_session"`
 	Body    AuthPasswordChangeDTO
-}
-
-type AuthOAuthStartInputDTO struct {
-	Provider string `query:"provider"`
-	ReturnTo string `query:"returnTo"`
-}
-
-type AuthOAuthCallbackInputDTO struct {
-	Provider string `query:"provider"`
-	Code     string `query:"code"`
-	State    string `query:"state"`
-}
-
-type AuthOAuthRedirectResponseDTO struct {
-	Location  string `header:"Location"`
-	SetCookie string `header:"Set-Cookie,omitempty"`
 }

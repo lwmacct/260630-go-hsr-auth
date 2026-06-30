@@ -12,7 +12,6 @@ type AdminUserService struct {
 	store          *repository.Store
 	users          *UserService
 	passwords      *AuthPasswordService
-	oauthAccounts  *AuthOauthAccountService
 	sessions       *AuthSessionService
 	runtimeAdminFn func(string) bool
 }
@@ -21,14 +20,13 @@ func NewAdminUserService(
 	store *repository.Store,
 	users *UserService,
 	passwords *AuthPasswordService,
-	oauthAccounts *AuthOauthAccountService,
 	sessions *AuthSessionService,
 	runtimeAdminFn func(string) bool,
 ) *AdminUserService {
 	if store == nil {
 		panic("NewAdminUserService: store is nil")
 	}
-	if users == nil || passwords == nil || oauthAccounts == nil || sessions == nil {
+	if users == nil || passwords == nil || sessions == nil {
 		panic("NewAdminUserService: dependency is nil")
 	}
 	if runtimeAdminFn == nil {
@@ -38,7 +36,6 @@ func NewAdminUserService(
 		store:          store,
 		users:          users,
 		passwords:      passwords,
-		oauthAccounts:  oauthAccounts,
 		sessions:       sessions,
 		runtimeAdminFn: runtimeAdminFn,
 	}
@@ -165,16 +162,12 @@ func (s *AdminUserService) DeleteBatch(ctx context.Context, actorID int64, ids [
 	}
 	return s.store.RunInTx(ctx, func(ctx context.Context, txStore *repository.Store) error {
 		passwords := NewAuthPasswordService(txStore)
-		oauthAccounts := NewAuthOauthAccountService(txStore)
 		sessions := NewAuthSessionService(txStore, AuthSessionDefaultTTL)
 		users := NewUserService(txStore)
 		if err := sessions.DeleteForUsers(ctx, ids); err != nil {
 			return err
 		}
 		if err := passwords.DeleteForUsers(ctx, ids); err != nil {
-			return err
-		}
-		if err := oauthAccounts.DeleteForUsers(ctx, ids); err != nil {
 			return err
 		}
 		return users.DeleteBatch(ctx, ids)
