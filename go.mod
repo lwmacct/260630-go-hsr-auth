@@ -4,7 +4,7 @@ go 1.26.4
 
 require (
 	github.com/danielgtaylor/huma/v2 v2.38.0
-	github.com/lwmacct/260622-go-pkg-tddcheck v0.19.260626
+	github.com/lwmacct/260622-go-pkg-tddcheck v0.21.260630
 	github.com/lwmacct/260630-go-hsr-shared v0.4.260630
 	github.com/uptrace/bun v1.2.18
 	github.com/uptrace/bun/dialect/sqlitedialect v1.2.18

@@ -8,23 +8,23 @@
 
 ## APIs
 
-| Method   | Path                          | Operation                   | Tags  | Handler             | Register            | File                                     |
-| -------- | ----------------------------- | --------------------------- | ----- | ------------------- | ------------------- | ---------------------------------------- |
-| `DELETE` | `/admin/users`                | `admin-delete-users`        | Admin | `deleteUsers`       | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
-| `GET`    | `/admin/users`                | `admin-list-users`          | Admin | `listUsers`         | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
-| `POST`   | `/admin/users`                | `admin-create-user`         | Admin | `createUser`        | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
-| `POST`   | `/admin/users/batch-password` | `admin-batch-user-password` | Admin | `batchUserPassword` | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
-| `POST`   | `/admin/users/batch-role`     | `admin-batch-user-role`     | Admin | `batchUserRole`     | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
-| `POST`   | `/admin/users/batch-status`   | `admin-batch-user-status`   | Admin | `batchUserStatus`   | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
-| `PATCH`  | `/admin/users/{id}`           | `admin-update-user`         | Admin | `updateUser`        | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
-| `POST`   | `/auth/challenges`            | `create-auth-challenge`     | Auth  | `createChallenge`   | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `GET`    | `/auth/config`                | `get-auth-config`           | Auth  | `configOutput`      | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `POST`   | `/auth/logout`                | `logout`                    | Auth  | `logout`            | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `GET`    | `/auth/me`                    | `get-current-user`          | Auth  | `me`                | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `POST`   | `/auth/password/change`       | `change-password`           | Auth  | `passwordChange`    | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `POST`   | `/auth/password/login`        | `login-password`            | Auth  | `passwordLogin`     | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `POST`   | `/auth/password/register`     | `register-password-user`    | Auth  | `passwordRegister`  | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `GET`    | `/health`                     | `get-health`                |       | `inline`            | `Endpoint.Register` | `internal/handler/x_http.endpoint.go`    |
+| Method   | Full Path                     | Mount | Operation Path                | Operation                   | Tags  | Handler             | Register            | File                                     |
+| -------- | ----------------------------- | ----- | ----------------------------- | --------------------------- | ----- | ------------------- | ------------------- | ---------------------------------------- |
+| `DELETE` | `/admin/users`                | `-`   | `/admin/users`                | `admin-delete-users`        | Admin | `deleteUsers`       | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
+| `GET`    | `/admin/users`                | `-`   | `/admin/users`                | `admin-list-users`          | Admin | `listUsers`         | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
+| `POST`   | `/admin/users`                | `-`   | `/admin/users`                | `admin-create-user`         | Admin | `createUser`        | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
+| `POST`   | `/admin/users/batch-password` | `-`   | `/admin/users/batch-password` | `admin-batch-user-password` | Admin | `batchUserPassword` | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
+| `POST`   | `/admin/users/batch-role`     | `-`   | `/admin/users/batch-role`     | `admin-batch-user-role`     | Admin | `batchUserRole`     | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
+| `POST`   | `/admin/users/batch-status`   | `-`   | `/admin/users/batch-status`   | `admin-batch-user-status`   | Admin | `batchUserStatus`   | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
+| `PATCH`  | `/admin/users/{id}`           | `-`   | `/admin/users/{id}`           | `admin-update-user`         | Admin | `updateUser`        | `RegisterAdminUser` | `internal/handler/admin_user.handler.go` |
+| `POST`   | `/auth/challenges`            | `-`   | `/auth/challenges`            | `create-auth-challenge`     | Auth  | `createChallenge`   | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
+| `GET`    | `/auth/config`                | `-`   | `/auth/config`                | `get-auth-config`           | Auth  | `configOutput`      | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
+| `POST`   | `/auth/logout`                | `-`   | `/auth/logout`                | `logout`                    | Auth  | `logout`            | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
+| `GET`    | `/auth/me`                    | `-`   | `/auth/me`                    | `get-current-user`          | Auth  | `me`                | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
+| `POST`   | `/auth/password/change`       | `-`   | `/auth/password/change`       | `change-password`           | Auth  | `passwordChange`    | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
+| `POST`   | `/auth/password/login`        | `-`   | `/auth/password/login`        | `login-password`            | Auth  | `passwordLogin`     | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
+| `POST`   | `/auth/password/register`     | `-`   | `/auth/password/register`     | `register-password-user`    | Auth  | `passwordRegister`  | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
+| `GET`    | `/health`                     | `-`   | `/health`                     | `get-health`                |       | `inline`            | `Endpoint.Register` | `internal/handler/x_http.endpoint.go`    |
 
 ## Handlers
 
@@ -120,3 +120,8 @@ Foreign keys:
 | `LastLoginAt` | `last_login_at` | `*time.Time` | [nullable]          |
 | `CreatedAt`   | `created_at`    | `time.Time`  | [notnull]           |
 | `UpdatedAt`   | `updated_at`    | `time.Time`  | [notnull]           |
+
+
+## Projections
+
+No projections found.
