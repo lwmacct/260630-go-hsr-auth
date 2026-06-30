@@ -16,6 +16,7 @@ type AuthSessionUser struct {
 
 type AuthSessionInput struct {
 	IP         string
+	Scheme     string
 	Host       string
 	UserAgent  string
 	Method     string

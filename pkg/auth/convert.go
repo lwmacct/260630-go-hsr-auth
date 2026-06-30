@@ -18,6 +18,7 @@ func RequestFromContext(ctx context.Context) (SessionRequest, bool) {
 func toServiceSessionRequest(value SessionRequest) service.AuthSessionInput {
 	return service.AuthSessionInput{
 		IP:         value.IP,
+		Scheme:     value.Scheme,
 		Host:       value.Host,
 		UserAgent:  value.UserAgent,
 		Method:     value.Method,

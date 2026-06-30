@@ -36,6 +36,7 @@ func New(options Options) (*Module, error) {
 	if options.Config.Request == nil {
 		options.Config.Request = RequestFromContext
 	}
+	options.Config.Session.Cookie = normalizeSessionCookieConfig(options.Config.Session.Cookie)
 
 	store := repository.NewStore(options.DB)
 	users := service.NewUserService(store)
@@ -89,11 +90,32 @@ func toHandlerConfig(config Config) handler.Config {
 		OAuthAutoRegister:        config.OAuth.AutoRegister,
 		OAuthCallbackBaseURL:     config.OAuth.CallbackBaseURL,
 		OAuthProviders:           toHandlerOAuthProviderConfigs(config.OAuth.Providers),
-		TLSEnabled:               config.HTTP.TLSEnabled,
-		SecureCookies:            config.HTTP.SecureCookies,
+		SessionCookie:            toHandlerSessionCookieConfig(config.Session.Cookie),
 		RuntimeAdmins:            config.RuntimeAdmins,
 		Request:                  toHandlerRequest(config.Request),
 		OAuthProvider:            toHandlerOAuthProvider(config.OAuthProvider),
+	}
+}
+
+func normalizeSessionCookieConfig(config SessionCookieConfig) SessionCookieConfig {
+	if config.Name == "" {
+		config.Name = "web_session"
+	}
+	if config.Path == "" {
+		config.Path = "/api"
+	}
+	if config.SameSite == 0 {
+		config.SameSite = http.SameSiteStrictMode
+	}
+	return config
+}
+
+func toHandlerSessionCookieConfig(config SessionCookieConfig) handler.SessionCookieConfig {
+	return handler.SessionCookieConfig{
+		Name:     config.Name,
+		Path:     config.Path,
+		Secure:   config.Secure,
+		SameSite: config.SameSite,
 	}
 }
 

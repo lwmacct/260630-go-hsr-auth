@@ -6,7 +6,7 @@ require (
 	github.com/danielgtaylor/huma/v2 v2.38.0
 	github.com/golang-module/base64Captcha v1.3.9
 	github.com/lwmacct/260622-go-pkg-tddcheck v0.19.260626
-	github.com/lwmacct/260630-go-hsr-shared v0.2.260630
+	github.com/lwmacct/260630-go-hsr-shared v0.3.260630
 	github.com/uptrace/bun v1.2.18
 	github.com/uptrace/bun/dialect/sqlitedialect v1.2.18
 	github.com/uptrace/bun/driver/sqliteshim v1.2.18

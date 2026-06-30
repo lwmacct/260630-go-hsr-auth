@@ -29,9 +29,9 @@ func utilRegisterErrorMessage(err error) string {
 func utilOAuthRedirectURI(config Config, request service.AuthSessionInput, provider string) string {
 	base := strings.TrimRight(config.OAuthCallbackBaseURL, "/")
 	if base == "" {
-		scheme := "http"
-		if config.TLSEnabled {
-			scheme = "https"
+		scheme := request.Scheme
+		if scheme == "" {
+			scheme = "http"
 		}
 		host := request.Host
 		if host == "" {
@@ -81,30 +81,30 @@ func utilRequest(ctx context.Context, config Config) (service.AuthSessionInput, 
 	return request, nil
 }
 
-func utilSessionCookieValue(value string, expiresAt time.Time, secure bool) string {
-	//nolint:gosec // Secure is controlled by HTTP TLS config; local HTTP development intentionally uses insecure cookies.
+func utilSessionCookieValue(value string, expiresAt time.Time, config SessionCookieConfig) string {
+	//nolint:gosec // Secure is an application cookie policy; local HTTP development intentionally uses insecure cookies.
 	return (&http.Cookie{
-		Name:     "web_session",
+		Name:     config.Name,
 		Value:    value,
-		Path:     "/api",
+		Path:     config.Path,
 		Expires:  expiresAt,
 		MaxAge:   int(time.Until(expiresAt).Seconds()),
 		HttpOnly: true,
-		Secure:   secure,
-		SameSite: http.SameSiteStrictMode,
+		Secure:   config.Secure,
+		SameSite: config.SameSite,
 	}).String()
 }
 
-func utilClearSessionCookie(secure bool) string {
-	//nolint:gosec // Secure is controlled by HTTP TLS config; local HTTP development intentionally uses insecure cookies.
+func utilClearSessionCookie(config SessionCookieConfig) string {
+	//nolint:gosec // Secure is an application cookie policy; local HTTP development intentionally uses insecure cookies.
 	return (&http.Cookie{
-		Name:     "web_session",
+		Name:     config.Name,
 		Value:    "",
-		Path:     "/api",
+		Path:     config.Path,
 		Expires:  time.Unix(0, 0),
 		MaxAge:   -1,
 		HttpOnly: true,
-		Secure:   secure,
-		SameSite: http.SameSiteStrictMode,
+		Secure:   config.Secure,
+		SameSite: config.SameSite,
 	}).String()
 }

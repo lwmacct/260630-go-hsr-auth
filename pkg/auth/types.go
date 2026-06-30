@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"net/http"
 	"time"
 
 	"github.com/lwmacct/260630-go-hsr-shared/pkg/requestctx"
@@ -31,7 +32,7 @@ const (
 type Config struct {
 	Local             LocalConfig
 	OAuth             OAuthConfig
-	HTTP              HTTPConfig
+	Session           SessionConfig
 	RuntimeAdmins     []string
 	OAuthProvider     func(string) (OAuthProvider, error)
 	ChallengeProvider ChallengeProvider
@@ -55,9 +56,15 @@ type OAuthProviderConfig struct {
 	Label    string
 }
 
-type HTTPConfig struct {
-	TLSEnabled    bool
-	SecureCookies bool
+type SessionConfig struct {
+	Cookie SessionCookieConfig
+}
+
+type SessionCookieConfig struct {
+	Name     string
+	Path     string
+	Secure   bool
+	SameSite http.SameSite
 }
 
 type Options struct {

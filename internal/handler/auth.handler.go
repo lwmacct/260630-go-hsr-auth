@@ -214,7 +214,7 @@ func (h authHandler) logout(ctx context.Context, input *AuthLogoutInputDTO) (*Au
 		_ = h.services.Sessions.Delete(ctx, input.Session)
 	}
 	return &AuthSessionResponseDTO{
-		SetCookie: utilClearSessionCookie(h.config.SecureCookies),
+		SetCookie: utilClearSessionCookie(h.config.SessionCookie),
 		Body:      AuthSessionDTO{Authenticated: false},
 	}, nil
 }
@@ -260,7 +260,7 @@ func (h authHandler) createSessionResponse(ctx context.Context, userID int64, re
 		return nil, huma.Error500InternalServerError("internal server error")
 	}
 	return &AuthSessionResponseDTO{
-		SetCookie: utilSessionCookieValue(sessionID, expiresAt, h.config.SecureCookies),
+		SetCookie: utilSessionCookieValue(sessionID, expiresAt, h.config.SessionCookie),
 		Body: AuthSessionDTO{
 			Authenticated: true,
 			ExpiresAt:     expiresAt,

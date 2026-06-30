@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/lwmacct/260630-go-hsr-auth/internal/service"
 )
@@ -13,8 +14,7 @@ type Config struct {
 	OAuthAutoRegister        bool
 	OAuthCallbackBaseURL     string
 	OAuthProviders           []OAuthProviderConfig
-	TLSEnabled               bool
-	SecureCookies            bool
+	SessionCookie            SessionCookieConfig
 	RuntimeAdmins            []string
 	Request                  RequestAuth
 	OAuthProvider            func(string) (OAuthProviderAuth, error)
@@ -41,4 +41,11 @@ type RequestAuth func(context.Context) (service.AuthSessionInput, bool)
 type OAuthProviderConfig struct {
 	Provider string
 	Label    string
+}
+
+type SessionCookieConfig struct {
+	Name     string
+	Path     string
+	Secure   bool
+	SameSite http.SameSite
 }
