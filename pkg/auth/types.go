@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/challenge"
 	"github.com/lwmacct/260630-go-hsr-shared/pkg/requestctx"
 )
 
@@ -19,9 +20,9 @@ const (
 )
 
 const (
-	ChallengeProviderImage     = "image"
-	ChallengeProviderHCaptcha  = "hcaptcha"
-	ChallengeProviderTurnstile = "turnstile"
+	ChallengeProviderImage     = challenge.ProviderImage
+	ChallengeProviderHCaptcha  = challenge.ProviderHCaptcha
+	ChallengeProviderTurnstile = challenge.ProviderTurnstile
 )
 
 const (
@@ -78,39 +79,15 @@ type RequestFunc func(context.Context) (SessionRequest, bool)
 
 type SessionRequest = requestctx.Request
 
-type ChallengeProvider interface {
-	Name() string
-	PublicConfig() ChallengePublicConfig
-	Create(context.Context, ChallengeInput) (*Challenge, error)
-	Verify(context.Context, ChallengeAnswer, ChallengeInput) error
-}
+type ChallengeProvider = challenge.Provider
 
-type ChallengeInput struct {
-	IP         string
-	UserAgent  string
-	Method     string
-	Path       string
-	RemoteAddr string
-}
+type ChallengeInput = challenge.Input
 
-type ChallengePublicConfig struct {
-	Provider string
-	SiteKey  string
-}
+type ChallengePublicConfig = challenge.PublicConfig
 
-type Challenge struct {
-	Provider    string
-	ChallengeID string
-	Image       string
-	ExpiresAt   time.Time
-}
+type Challenge = challenge.Challenge
 
-type ChallengeAnswer struct {
-	Provider    string
-	ChallengeID string
-	Answer      string
-	Token       string
-}
+type ChallengeAnswer = challenge.Answer
 
 type OAuthProvider interface {
 	Name() string

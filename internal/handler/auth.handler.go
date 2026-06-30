@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/danielgtaylor/huma/v2"
+	challengepkg "github.com/lwmacct/260630-go-hsr-shared/pkg/challenge"
 
 	"github.com/lwmacct/260630-go-hsr-auth/internal/service"
 )
@@ -60,7 +61,7 @@ func (h authHandler) createChallenge(ctx context.Context, _ *struct{}) (*BodyDTO
 	}
 	challenge, err := h.services.Challenges.Create(ctx, ToAuthChallengeInput(request))
 	if err != nil {
-		if errors.Is(err, service.ErrAuthChallengeLimitExceeded) {
+		if errors.Is(err, challengepkg.ErrLimitExceeded) {
 			return nil, huma.Error429TooManyRequests("too many challenges")
 		}
 		return nil, huma.Error400BadRequest("challenge creation unsupported")

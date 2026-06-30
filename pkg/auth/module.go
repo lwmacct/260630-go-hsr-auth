@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/danielgtaylor/huma/v2"
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/challenge"
 	"github.com/uptrace/bun"
 
 	"github.com/lwmacct/260630-go-hsr-auth/internal/handler"
@@ -44,7 +45,7 @@ func New(options Options) (*Module, error) {
 	oauthAccounts := service.NewAuthOauthAccountService(store)
 	sessions := service.NewAuthSessionService(store, options.SessionTTL)
 	oauthFlows := service.NewAuthOauthFlowService(store, options.OAuthTTL)
-	challenges := service.NewAuthChallengeService(serviceChallengeProvider{provider: options.Config.ChallengeProvider})
+	challenges := challenge.NewService(options.Config.ChallengeProvider)
 	adminUsers := service.NewAdminUserService(
 		store,
 		users,

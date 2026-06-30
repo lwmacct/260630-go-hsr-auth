@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/lwmacct/260630-go-hsr-auth/internal/service"
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/challenge"
 )
 
 type Config struct {
@@ -26,7 +27,7 @@ type Services struct {
 	OAuthAccounts *service.AuthOauthAccountService
 	Sessions      *service.AuthSessionService
 	OAuthFlows    *service.AuthOauthFlowService
-	Challenges    *service.AuthChallengeService
+	Challenges    *challenge.Service
 	AdminUsers    *service.AdminUserService
 }
 

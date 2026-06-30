@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/lwmacct/260630-go-hsr-auth/internal/infra/token"
 	"github.com/lwmacct/260630-go-hsr-auth/internal/repository"
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/token"
 )
 
 type AuthSessionService struct {

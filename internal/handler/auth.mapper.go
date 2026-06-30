@@ -1,6 +1,9 @@
 package handler
 
-import "github.com/lwmacct/260630-go-hsr-auth/internal/service"
+import (
+	"github.com/lwmacct/260630-go-hsr-auth/internal/service"
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/challenge"
+)
 
 func ToAuthUserDTO(user *service.User, runtimeAdmin bool) *AuthUserDTO {
 	if user == nil {
@@ -18,20 +21,20 @@ func ToAuthUserDTO(user *service.User, runtimeAdmin bool) *AuthUserDTO {
 	}
 }
 
-func ToAuthChallengeCreateDTO(challenge *service.AuthChallenge) AuthChallengeCreateDTO {
-	if challenge == nil {
+func ToAuthChallengeCreateDTO(value *challenge.Challenge) AuthChallengeCreateDTO {
+	if value == nil {
 		return AuthChallengeCreateDTO{}
 	}
 	return AuthChallengeCreateDTO{
-		Provider:    challenge.Provider,
-		ChallengeID: challenge.ChallengeID,
-		Image:       challenge.Image,
-		ExpiresAt:   challenge.ExpiresAt,
+		Provider:    value.Provider,
+		ChallengeID: value.ChallengeID,
+		Image:       value.Image,
+		ExpiresAt:   value.ExpiresAt,
 	}
 }
 
-func ToAuthChallengeAnswer(dto AuthChallengeDTO) service.AuthChallengeAnswer {
-	return service.AuthChallengeAnswer{
+func ToAuthChallengeAnswer(dto AuthChallengeDTO) challenge.Answer {
+	return challenge.Answer{
 		Provider:    dto.Provider,
 		ChallengeID: dto.ChallengeID,
 		Answer:      dto.Answer,
@@ -39,8 +42,8 @@ func ToAuthChallengeAnswer(dto AuthChallengeDTO) service.AuthChallengeAnswer {
 	}
 }
 
-func ToAuthChallengeInput(request service.AuthSessionInput) service.AuthChallengeInput {
-	return service.AuthChallengeInput{
+func ToAuthChallengeInput(request service.AuthSessionInput) challenge.Input {
+	return challenge.Input{
 		IP:         request.IP,
 		UserAgent:  request.UserAgent,
 		Method:     request.Method,

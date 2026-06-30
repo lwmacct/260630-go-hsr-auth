@@ -4,9 +4,8 @@ go 1.26.4
 
 require (
 	github.com/danielgtaylor/huma/v2 v2.38.0
-	github.com/golang-module/base64Captcha v1.3.9
 	github.com/lwmacct/260622-go-pkg-tddcheck v0.19.260626
-	github.com/lwmacct/260630-go-hsr-shared v0.3.260630
+	github.com/lwmacct/260630-go-hsr-shared v0.4.260630
 	github.com/uptrace/bun v1.2.18
 	github.com/uptrace/bun/dialect/sqlitedialect v1.2.18
 	github.com/uptrace/bun/driver/sqliteshim v1.2.18
@@ -15,6 +14,7 @@ require (
 
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
+	github.com/golang-module/base64Captcha v1.3.9 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
