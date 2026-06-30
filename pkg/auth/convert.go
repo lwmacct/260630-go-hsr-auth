@@ -26,17 +26,6 @@ func toServiceSessionRequest(value SessionRequest) service.AuthSessionInput {
 	}
 }
 
-func fromServiceSessionRequest(value service.AuthSessionInput) SessionRequest {
-	return SessionRequest{
-		IP:         value.IP,
-		Host:       value.Host,
-		UserAgent:  value.UserAgent,
-		Method:     value.Method,
-		Path:       value.Path,
-		RemoteAddr: value.RemoteAddr,
-	}
-}
-
 func toServiceChallengeInput(value ChallengeInput) service.AuthChallengeInput {
 	return service.AuthChallengeInput{
 		IP:         value.IP,
