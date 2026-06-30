@@ -24,7 +24,6 @@
 | `POST`   | `/auth/password/change`       | `-`   | `/auth/password/change`       | `change-password`           | Auth  | `passwordChange`    | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
 | `POST`   | `/auth/password/login`        | `-`   | `/auth/password/login`        | `login-password`            | Auth  | `passwordLogin`     | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
 | `POST`   | `/auth/password/register`     | `-`   | `/auth/password/register`     | `register-password-user`    | Auth  | `passwordRegister`  | `RegisterAuth`      | `internal/handler/auth.handler.go`       |
-| `GET`    | `/health`                     | `-`   | `/health`                     | `get-health`                |       | `inline`            | `Endpoint.Register` | `internal/handler/x_http.endpoint.go`    |
 
 ## Handlers
 

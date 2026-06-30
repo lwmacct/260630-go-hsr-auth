@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"context"
 	"net/http"
-	"time"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humago"
@@ -28,17 +26,4 @@ func (e *Endpoint) Handler() http.Handler {
 func (e *Endpoint) Register(api huma.API) {
 	RegisterAuth(api, e.config, e.services)
 	RegisterAdminUser(api, e.config, e.services)
-	huma.Register(api, huma.Operation{
-		OperationID: "get-health",
-		Method:      http.MethodGet,
-		Path:        "/health",
-		Summary:     "Get service health",
-	}, func(ctx context.Context, input *struct{}) (*HealthOutputDTO, error) {
-		return &HealthOutputDTO{
-			Body: HealthResponseDTO{
-				Status:    "ok",
-				Timestamp: time.Now().UTC(),
-			},
-		}, nil
-	})
 }

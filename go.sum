@@ -20,8 +20,8 @@ github.com/jinzhu/inflection v1.0.0 h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD
 github.com/jinzhu/inflection v1.0.0/go.mod h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc=
 github.com/lwmacct/260622-go-pkg-tddcheck v0.21.260630 h1:2SH/Yabx6o0jhVMdyg3Us9lyfGycphGohBEgP1ymVPg=
 github.com/lwmacct/260622-go-pkg-tddcheck v0.21.260630/go.mod h1:vcBuL7xMgFha98wyMcmTck3z6IADiP7pspe4PRUq0Cg=
-github.com/lwmacct/260630-go-hsr-shared v0.4.260630 h1:CeG+lS/fA1P50ZnMQfkKV60DUa+SD9hgL61+dwmding=
-github.com/lwmacct/260630-go-hsr-shared v0.4.260630/go.mod h1:VcVSXaPNCeZ5v2JPyNGtRp7m+NU8jYISN+vVCqhFrMo=
+github.com/lwmacct/260630-go-hsr-shared v0.9.260630 h1:/0MOl7Cnb7cWHe1a1+Mkr8Mru4tmQmdyX2SiXbF/ygg=
+github.com/lwmacct/260630-go-hsr-shared v0.9.260630/go.mod h1:JevRACq1cDd6oZDX4pN1ncffmeoM/d6YXN271dJB5Cc=
 github.com/mattn/go-isatty v0.0.21 h1:xYae+lCNBP7QuW4PUnNG61ffM4hVIfm+zUzDuSzYLGs=
 github.com/mattn/go-isatty v0.0.21/go.mod h1:ZXfXG4SQHsB/w3ZeOYbR0PrPwLy+n6xiMrJlRFqopa4=
 github.com/mattn/go-sqlite3 v1.14.34 h1:3NtcvcUnFBPsuRcno8pUtupspG/GM+9nZ88zgJcp6Zk=

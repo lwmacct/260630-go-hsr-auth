@@ -8,6 +8,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/lwmacct/260630-go-hsr-auth/internal/repository"
 	"github.com/lwmacct/260630-go-hsr-shared/pkg/challenge"
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/identity"
 	"github.com/uptrace/bun"
 
 	"github.com/lwmacct/260630-go-hsr-auth/internal/handler"
@@ -134,6 +135,14 @@ func (m *Module) CurrentUser(ctx context.Context, sessionID string, request Sess
 	return m.UserByID(ctx, sessionUser.ID)
 }
 
+func (m *Module) CurrentPrincipal(ctx context.Context, sessionID string, request SessionRequest) (*identity.Principal, error) {
+	user, err := m.CurrentUser(ctx, sessionID, request)
+	if err != nil {
+		return nil, err
+	}
+	return toPrincipal(user), nil
+}
+
 func (m *Module) RequireAdmin(ctx context.Context, sessionID string, request SessionRequest) (*User, error) {
 	user, err := m.CurrentUser(ctx, sessionID, request)
 	if err != nil {
@@ -143,6 +152,26 @@ func (m *Module) RequireAdmin(ctx context.Context, sessionID string, request Ses
 		return nil, repository.ErrNotFound
 	}
 	return user, nil
+}
+
+func toPrincipal(user *User) *identity.Principal {
+	if user == nil {
+		return nil
+	}
+	return &identity.Principal{
+		ID:          user.ID,
+		Username:    user.Username,
+		DisplayName: user.DisplayName,
+		Email:       user.Email,
+		AvatarURL:   user.AvatarURL,
+		Role:        user.Role,
+		Status:      user.Status,
+		Admin:       user.Admin,
+		DisabledAt:  user.DisabledAt,
+		LastLoginAt: user.LastLoginAt,
+		CreatedAt:   user.CreatedAt,
+		UpdatedAt:   user.UpdatedAt,
+	}
 }
 
 func toHandlerConfig(config Config) handler.Config {

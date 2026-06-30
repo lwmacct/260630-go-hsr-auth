@@ -6,17 +6,18 @@ import (
 	"time"
 
 	"github.com/lwmacct/260630-go-hsr-shared/pkg/challenge"
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/identity"
 	"github.com/lwmacct/260630-go-hsr-shared/pkg/requestctx"
 )
 
 const (
-	UserRoleUser  = "user"
-	UserRoleAdmin = "admin"
+	UserRoleUser  = identity.RoleUser
+	UserRoleAdmin = identity.RoleAdmin
 )
 
 const (
-	UserStatusActive   = "active"
-	UserStatusDisabled = "disabled"
+	UserStatusActive   = identity.StatusActive
+	UserStatusDisabled = identity.StatusDisabled
 )
 
 const (
