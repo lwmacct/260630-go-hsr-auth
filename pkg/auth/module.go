@@ -86,12 +86,38 @@ func (m *Module) Register(api huma.API) {
 	m.endpoint.Register(api)
 }
 
-func (m *Module) UserByID(ctx context.Context, id int64) (*User, error) {
+func (m *Module) UserByID(ctx context.Context, id string) (*User, error) {
 	user, err := m.users.ByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 	return m.toUser(user), nil
+}
+
+func (m *Module) Principal(ctx context.Context, subject string) (*identity.Principal, error) {
+	user, err := m.users.ByID(ctx, subject)
+	if err != nil {
+		return nil, err
+	}
+	return toPrincipal(m.toUser(user)), nil
+}
+
+func (m *Module) Principals(ctx context.Context, subjects []string) (map[string]*identity.Principal, error) {
+	out := make(map[string]*identity.Principal, len(subjects))
+	for _, subject := range subjects {
+		if subject == "" {
+			continue
+		}
+		if _, ok := out[subject]; ok {
+			continue
+		}
+		principal, err := m.Principal(ctx, subject)
+		if err != nil {
+			continue
+		}
+		out[subject] = principal
+	}
+	return out, nil
 }
 
 func (m *Module) CreateExternalUser(ctx context.Context, input ExternalUserInput) (*User, error) {
@@ -107,7 +133,7 @@ func (m *Module) CreateExternalUser(ctx context.Context, input ExternalUserInput
 	return m.toUser(user), nil
 }
 
-func (m *Module) CreateSession(ctx context.Context, userID int64, request SessionRequest) (*Session, error) {
+func (m *Module) CreateSession(ctx context.Context, userID string, request SessionRequest) (*Session, error) {
 	sessionID, expiresAt, err := m.sessions.Create(ctx, userID, toServiceSessionRequest(request))
 	if err != nil {
 		return nil, err
@@ -160,6 +186,7 @@ func toPrincipal(user *User) *identity.Principal {
 	}
 	return &identity.Principal{
 		ID:          user.ID,
+		Subject:     user.ID,
 		Username:    user.Username,
 		DisplayName: user.DisplayName,
 		Email:       user.Email,

@@ -9,6 +9,7 @@ import (
 
 func (s *Store) CreateUser(ctx context.Context, item UserCreate) (*UserRow, error) {
 	row := UserModel{
+		ID:          item.ID,
 		Username:    item.Username,
 		DisplayName: item.DisplayName,
 		Email:       item.Email,
@@ -25,7 +26,7 @@ func (s *Store) CreateUser(ctx context.Context, item UserCreate) (*UserRow, erro
 	return &result, nil
 }
 
-func (s *Store) FetchUser(ctx context.Context, id int64) (*UserRow, error) {
+func (s *Store) FetchUser(ctx context.Context, id string) (*UserRow, error) {
 	row := new(UserModel)
 	if err := s.db.NewSelect().Model(row).Where("id = ?", id).Scan(ctx); err != nil {
 		return nil, WrapNotFound(err)
@@ -73,7 +74,7 @@ func (s *Store) FetchUserTotalByFilter(ctx context.Context, filter UserFilter) (
 	return &UserTotal{Count: count}, nil
 }
 
-func (s *Store) UpdateUserProfile(ctx context.Context, id int64, patch UserProfilePatch) (*UserRow, error) {
+func (s *Store) UpdateUserProfile(ctx context.Context, id string, patch UserProfilePatch) (*UserRow, error) {
 	result, err := s.db.NewUpdate().
 		Model((*UserModel)(nil)).
 		Set("display_name = ?", patch.DisplayName).
@@ -91,7 +92,7 @@ func (s *Store) UpdateUserProfile(ctx context.Context, id int64, patch UserProfi
 	return s.FetchUser(ctx, id)
 }
 
-func (s *Store) UpdateUserLastLogin(ctx context.Context, id int64, lastLoginAt time.Time) (*UserChange, error) {
+func (s *Store) UpdateUserLastLogin(ctx context.Context, id string, lastLoginAt time.Time) (*UserChange, error) {
 	result, err := s.db.NewUpdate().
 		Model((*UserModel)(nil)).
 		Set("last_login_at = ?", lastLoginAt).
@@ -111,7 +112,7 @@ func (s *Store) UpdateUserLastLogin(ctx context.Context, id int64, lastLoginAt t
 	return &UserChange{Affected: affected}, nil
 }
 
-func (s *Store) UpdateUserRoleBatch(ctx context.Context, ids []int64, role string, updatedAt time.Time) (*UserChange, error) {
+func (s *Store) UpdateUserRoleBatch(ctx context.Context, ids []string, role string, updatedAt time.Time) (*UserChange, error) {
 	result, err := s.db.NewUpdate().
 		Model((*UserModel)(nil)).
 		Set("role = ?", role).
@@ -128,7 +129,7 @@ func (s *Store) UpdateUserRoleBatch(ctx context.Context, ids []int64, role strin
 	return &UserChange{Affected: affected}, nil
 }
 
-func (s *Store) UpdateUserStatusBatch(ctx context.Context, ids []int64, status string, updatedAt time.Time, disabledAt *time.Time) (*UserChange, error) {
+func (s *Store) UpdateUserStatusBatch(ctx context.Context, ids []string, status string, updatedAt time.Time, disabledAt *time.Time) (*UserChange, error) {
 	query := s.db.NewUpdate().
 		Model((*UserModel)(nil)).
 		Set("status = ?", status).
@@ -150,7 +151,7 @@ func (s *Store) UpdateUserStatusBatch(ctx context.Context, ids []int64, status s
 	return &UserChange{Affected: affected}, nil
 }
 
-func (s *Store) DeleteUserBatch(ctx context.Context, ids []int64) error {
+func (s *Store) DeleteUserBatch(ctx context.Context, ids []string) error {
 	_, err := s.db.NewDelete().
 		Model((*UserModel)(nil)).
 		Where("id IN (?)", bun.List(ids)).

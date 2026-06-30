@@ -95,7 +95,7 @@ func (s *AdminUserService) Create(ctx context.Context, input AdminUserCreateInpu
 	return &dto, nil
 }
 
-func (s *AdminUserService) UpdateProfile(ctx context.Context, id int64, input AdminUserUpdateProfileInput) (*AdminUser, error) {
+func (s *AdminUserService) UpdateProfile(ctx context.Context, id string, input AdminUserUpdateProfileInput) (*AdminUser, error) {
 	user, err := s.users.UpdateProfile(ctx, id, UpdateUserProfileInput(input))
 	if err != nil {
 		if errors.Is(err, repository.ErrNotFound) {
@@ -107,14 +107,14 @@ func (s *AdminUserService) UpdateProfile(ctx context.Context, id int64, input Ad
 	return &dto, nil
 }
 
-func (s *AdminUserService) SetRoleBatch(ctx context.Context, actorID int64, ids []int64, role string) error {
+func (s *AdminUserService) SetRoleBatch(ctx context.Context, actorID string, ids []string, role string) error {
 	if err := validateAdminUserSelection(actorID, ids); err != nil {
 		return err
 	}
 	return s.users.SetRoleBatch(ctx, ids, role)
 }
 
-func (s *AdminUserService) SetStatusBatch(ctx context.Context, actorID int64, ids []int64, status string) error {
+func (s *AdminUserService) SetStatusBatch(ctx context.Context, actorID string, ids []string, status string) error {
 	if err := validateAdminUserSelection(actorID, ids); err != nil {
 		return err
 	}
@@ -132,7 +132,7 @@ func (s *AdminUserService) SetStatusBatch(ctx context.Context, actorID int64, id
 	return err
 }
 
-func (s *AdminUserService) ResetPasswordBatch(ctx context.Context, actorID int64, ids []int64, password string) error {
+func (s *AdminUserService) ResetPasswordBatch(ctx context.Context, actorID string, ids []string, password string) error {
 	if err := validateAdminUserSelection(actorID, ids); err != nil {
 		return err
 	}
@@ -156,7 +156,7 @@ func (s *AdminUserService) ResetPasswordBatch(ctx context.Context, actorID int64
 	})
 }
 
-func (s *AdminUserService) DeleteBatch(ctx context.Context, actorID int64, ids []int64) error {
+func (s *AdminUserService) DeleteBatch(ctx context.Context, actorID string, ids []string) error {
 	if err := validateAdminUserSelection(actorID, ids); err != nil {
 		return err
 	}

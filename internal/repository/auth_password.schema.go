@@ -10,7 +10,7 @@ import (
 type AuthPasswordModel struct {
 	bun.BaseModel `bun:"table:auth_passwords,alias:ap"`
 
-	UserID            int64     `bun:"user_id,pk"`
+	UserID            string    `bun:"user_id,pk,type:uuid"`
 	PasswordHash      string    `bun:"password_hash,notnull"`
 	PasswordChangedAt time.Time `bun:"password_changed_at,notnull"`
 	CreatedAt         time.Time `bun:"created_at,notnull"`

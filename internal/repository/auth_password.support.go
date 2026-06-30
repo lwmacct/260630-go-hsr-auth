@@ -3,7 +3,7 @@ package repository
 import "time"
 
 type AuthPasswordCreate struct {
-	UserID            int64
+	UserID            string
 	PasswordHash      string
 	PasswordChangedAt time.Time
 	CreatedAt         time.Time
@@ -11,7 +11,7 @@ type AuthPasswordCreate struct {
 }
 
 type AuthPasswordRow struct {
-	UserID            int64
+	UserID            string
 	PasswordHash      string
 	PasswordChangedAt time.Time
 	CreatedAt         time.Time

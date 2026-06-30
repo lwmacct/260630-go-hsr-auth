@@ -71,7 +71,7 @@ type Challenge = challenge.Challenge
 type ChallengeAnswer = challenge.Answer
 
 type User struct {
-	ID          int64
+	ID          string
 	Username    string
 	DisplayName string
 	Email       string

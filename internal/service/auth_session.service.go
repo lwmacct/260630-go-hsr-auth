@@ -23,7 +23,7 @@ func NewAuthSessionService(store *repository.Store, ttl time.Duration) *AuthSess
 	return &AuthSessionService{store: store, ttl: ttl}
 }
 
-func (s *AuthSessionService) Create(ctx context.Context, userID int64, request AuthSessionInput) (string, time.Time, error) {
+func (s *AuthSessionService) Create(ctx context.Context, userID string, request AuthSessionInput) (string, time.Time, error) {
 	sessionID, err := token.NewWithPrefix("sess")
 	if err != nil {
 		return "", time.Time{}, err
@@ -50,7 +50,7 @@ func (s *AuthSessionService) Delete(ctx context.Context, sessionID string) error
 	return s.store.DeleteAuthSession(ctx, utilAuthSessionTokenHash(sessionID))
 }
 
-func (s *AuthSessionService) RevokeForUsers(ctx context.Context, userIDs []int64) error {
+func (s *AuthSessionService) RevokeForUsers(ctx context.Context, userIDs []string) error {
 	if len(userIDs) == 0 {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (s *AuthSessionService) RevokeForUsers(ctx context.Context, userIDs []int64
 	return err
 }
 
-func (s *AuthSessionService) DeleteForUsers(ctx context.Context, userIDs []int64) error {
+func (s *AuthSessionService) DeleteForUsers(ctx context.Context, userIDs []string) error {
 	if len(userIDs) == 0 {
 		return nil
 	}

@@ -55,7 +55,7 @@ func (s *Store) UpdateAuthSessionTouch(ctx context.Context, tokenHash []byte, la
 	return &AuthSessionChange{Affected: affected}, nil
 }
 
-func (s *Store) UpdateAuthSessionRevokedForUsers(ctx context.Context, userIDs []int64, revokedAt time.Time) (*AuthSessionChange, error) {
+func (s *Store) UpdateAuthSessionRevokedForUsers(ctx context.Context, userIDs []string, revokedAt time.Time) (*AuthSessionChange, error) {
 	result, err := s.db.NewUpdate().
 		Model((*AuthSessionModel)(nil)).
 		Set("revoked_at = ?", revokedAt).
@@ -80,7 +80,7 @@ func (s *Store) DeleteAuthSession(ctx context.Context, tokenHash []byte) error {
 	return err
 }
 
-func (s *Store) DeleteAuthSessionForUsers(ctx context.Context, userIDs []int64) error {
+func (s *Store) DeleteAuthSessionForUsers(ctx context.Context, userIDs []string) error {
 	_, err := s.db.NewDelete().
 		Model((*AuthSessionModel)(nil)).
 		Where("user_id IN (?)", bun.List(userIDs)).

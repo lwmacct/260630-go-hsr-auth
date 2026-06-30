@@ -43,7 +43,7 @@ func (s *Store) UpsertAuthPassword(ctx context.Context, item AuthPasswordCreate)
 	return &result, nil
 }
 
-func (s *Store) FetchAuthPassword(ctx context.Context, userID int64) (*AuthPasswordRow, error) {
+func (s *Store) FetchAuthPassword(ctx context.Context, userID string) (*AuthPasswordRow, error) {
 	row := new(AuthPasswordModel)
 	if err := s.db.NewSelect().Model(row).Where("user_id = ?", userID).Scan(ctx); err != nil {
 		return nil, WrapNotFound(err)
@@ -52,7 +52,7 @@ func (s *Store) FetchAuthPassword(ctx context.Context, userID int64) (*AuthPassw
 	return &result, nil
 }
 
-func (s *Store) UpdateAuthPassword(ctx context.Context, userID int64, passwordHash string, updatedAt time.Time) (*AuthPasswordChange, error) {
+func (s *Store) UpdateAuthPassword(ctx context.Context, userID string, passwordHash string, updatedAt time.Time) (*AuthPasswordChange, error) {
 	result, err := s.db.NewUpdate().
 		Model((*AuthPasswordModel)(nil)).
 		Set("password_hash = ?", passwordHash).
@@ -73,7 +73,7 @@ func (s *Store) UpdateAuthPassword(ctx context.Context, userID int64, passwordHa
 	return &AuthPasswordChange{Affected: affected}, nil
 }
 
-func (s *Store) DeleteAuthPasswordForUsers(ctx context.Context, userIDs []int64) error {
+func (s *Store) DeleteAuthPasswordForUsers(ctx context.Context, userIDs []string) error {
 	_, err := s.db.NewDelete().
 		Model((*AuthPasswordModel)(nil)).
 		Where("user_id IN (?)", bun.List(userIDs)).

@@ -39,7 +39,7 @@ type AuthPasswordChangeDTO struct {
 }
 
 type AuthUserDTO struct {
-	ID          int64  `json:"id"`
+	ID          string `json:"id"`
 	Username    string `json:"username"`
 	DisplayName string `json:"displayName"`
 	Email       string `json:"email,omitempty"`

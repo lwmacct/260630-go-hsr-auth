@@ -19,7 +19,7 @@ const (
 )
 
 type User struct {
-	ID          int64
+	ID          string
 	Username    string
 	DisplayName string
 	Email       string

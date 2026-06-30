@@ -170,7 +170,7 @@ func (h authHandler) verifyChallenge(ctx context.Context, challenge AuthChalleng
 	return h.services.Challenges.Verify(ctx, ToAuthChallengeAnswer(challenge), ToAuthChallengeInput(request))
 }
 
-func (h authHandler) createSessionResponse(ctx context.Context, userID int64, request service.AuthSessionInput) (*AuthSessionResponseDTO, error) {
+func (h authHandler) createSessionResponse(ctx context.Context, userID string, request service.AuthSessionInput) (*AuthSessionResponseDTO, error) {
 	sessionID, expiresAt, err := h.services.Sessions.Create(ctx, userID, request)
 	if err != nil {
 		return nil, huma.Error500InternalServerError("internal server error")

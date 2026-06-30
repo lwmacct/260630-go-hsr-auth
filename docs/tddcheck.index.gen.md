@@ -66,7 +66,7 @@
 
 | Field               | Column                | Go Type     | Attributes |
 | ------------------- | --------------------- | ----------- | ---------- |
-| `UserID`            | `user_id`             | `int64`     | [pk]       |
+| `UserID`            | `user_id`             | `string`    | [pk]       |
 | `PasswordHash`      | `password_hash`       | `string`    | [notnull]  |
 | `PasswordChangedAt` | `password_changed_at` | `time.Time` | [notnull]  |
 | `CreatedAt`         | `created_at`          | `time.Time` | [notnull]  |
@@ -86,7 +86,7 @@ Foreign keys:
 | Field           | Column            | Go Type      | Attributes |
 | --------------- | ----------------- | ------------ | ---------- |
 | `TokenHash`     | `token_hash`      | `[]byte`     | [pk]       |
-| `UserID`        | `user_id`         | `int64`      | [notnull]  |
+| `UserID`        | `user_id`         | `string`     | [notnull]  |
 | `LoginIP`       | `login_ip`        | `string`     | [notnull]  |
 | `LastIP`        | `last_ip`         | `string`     | [notnull]  |
 | `UserAgentHash` | `user_agent_hash` | `[]byte`     | [notnull]  |
@@ -106,19 +106,19 @@ Foreign keys:
 - File: `internal/repository/user.schema.go`
 - Alias: `u`
 
-| Field         | Column          | Go Type      | Attributes          |
-| ------------- | --------------- | ------------ | ------------------- |
-| `ID`          | `id`            | `int64`      | [pk, autoincrement] |
-| `Username`    | `username`      | `string`     | [notnull, unique]   |
-| `DisplayName` | `display_name`  | `string`     | [notnull]           |
-| `Email`       | `email`         | `string`     | [nullable, unique]  |
-| `AvatarURL`   | `avatar_url`    | `string`     | [nullable]          |
-| `Role`        | `role`          | `string`     | [notnull]           |
-| `Status`      | `status`        | `string`     | [notnull]           |
-| `DisabledAt`  | `disabled_at`   | `*time.Time` | [nullable]          |
-| `LastLoginAt` | `last_login_at` | `*time.Time` | [nullable]          |
-| `CreatedAt`   | `created_at`    | `time.Time`  | [notnull]           |
-| `UpdatedAt`   | `updated_at`    | `time.Time`  | [notnull]           |
+| Field         | Column          | Go Type      | Attributes         |
+| ------------- | --------------- | ------------ | ------------------ |
+| `ID`          | `id`            | `string`     | [pk]               |
+| `Username`    | `username`      | `string`     | [notnull, unique]  |
+| `DisplayName` | `display_name`  | `string`     | [notnull]          |
+| `Email`       | `email`         | `string`     | [nullable, unique] |
+| `AvatarURL`   | `avatar_url`    | `string`     | [nullable]         |
+| `Role`        | `role`          | `string`     | [notnull]          |
+| `Status`      | `status`        | `string`     | [notnull]          |
+| `DisabledAt`  | `disabled_at`   | `*time.Time` | [nullable]         |
+| `LastLoginAt` | `last_login_at` | `*time.Time` | [nullable]         |
+| `CreatedAt`   | `created_at`    | `time.Time`  | [notnull]          |
+| `UpdatedAt`   | `updated_at`    | `time.Time`  | [notnull]          |
 
 
 ## Projections

@@ -50,7 +50,7 @@ func (s *AuthPasswordService) Register(ctx context.Context, input AuthPasswordRe
 	return user, nil
 }
 
-func (s *AuthPasswordService) Set(ctx context.Context, username string, userID int64, password string) error {
+func (s *AuthPasswordService) Set(ctx context.Context, username string, userID string, password string) error {
 	if err := validateAuthPassword(username, password); err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func (s *AuthPasswordService) Set(ctx context.Context, username string, userID i
 	return err
 }
 
-func (s *AuthPasswordService) Reset(ctx context.Context, username string, userID int64, password string) error {
+func (s *AuthPasswordService) Reset(ctx context.Context, username string, userID string, password string) error {
 	if err := validateAuthPassword(username, password); err != nil {
 		return err
 	}
@@ -88,14 +88,14 @@ func (s *AuthPasswordService) Reset(ctx context.Context, username string, userID
 	return err
 }
 
-func (s *AuthPasswordService) DeleteForUsers(ctx context.Context, userIDs []int64) error {
+func (s *AuthPasswordService) DeleteForUsers(ctx context.Context, userIDs []string) error {
 	if len(userIDs) == 0 {
 		return nil
 	}
 	return s.store.DeleteAuthPasswordForUsers(ctx, userIDs)
 }
 
-func (s *AuthPasswordService) Change(ctx context.Context, username string, userID int64, currentPassword string, newPassword string) error {
+func (s *AuthPasswordService) Change(ctx context.Context, username string, userID string, currentPassword string, newPassword string) error {
 	if currentPassword == "" {
 		return ErrAuthPasswordInvalidCredentials
 	}

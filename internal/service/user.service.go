@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/lwmacct/260630-go-hsr-auth/internal/repository"
+	"github.com/lwmacct/260630-go-hsr-shared/pkg/idgen"
 )
 
 type UserService struct {
@@ -39,6 +40,7 @@ func (s *UserService) Create(ctx context.Context, input CreateUserInput) (*User,
 	}
 	now := time.Now().UTC()
 	row, err := s.store.CreateUser(ctx, repository.UserCreate{
+		ID:          idgen.NewUUID7(),
 		Username:    username,
 		DisplayName: displayName,
 		Email:       strings.TrimSpace(input.Email),
@@ -81,7 +83,7 @@ func (s *UserService) CreateWithUniqueUsername(ctx context.Context, input Create
 	return nil, ErrUserUsernameTaken
 }
 
-func (s *UserService) ByID(ctx context.Context, id int64) (*User, error) {
+func (s *UserService) ByID(ctx context.Context, id string) (*User, error) {
 	row, err := s.store.FetchUser(ctx, id)
 	if err != nil {
 		return nil, err
@@ -145,7 +147,7 @@ func (s *UserService) Search(ctx context.Context, filter UserListFilter) ([]User
 	return users, total.Count, nil
 }
 
-func (s *UserService) UpdateProfile(ctx context.Context, id int64, input UpdateUserProfileInput) (*User, error) {
+func (s *UserService) UpdateProfile(ctx context.Context, id string, input UpdateUserProfileInput) (*User, error) {
 	displayName := strings.TrimSpace(input.DisplayName)
 	if displayName == "" {
 		return nil, ErrUserInvalidCredentials
@@ -163,7 +165,7 @@ func (s *UserService) UpdateProfile(ctx context.Context, id int64, input UpdateU
 	return &user, nil
 }
 
-func (s *UserService) SetRoleBatch(ctx context.Context, ids []int64, role string) error {
+func (s *UserService) SetRoleBatch(ctx context.Context, ids []string, role string) error {
 	role = strings.TrimSpace(role)
 	if len(ids) == 0 {
 		return ErrUserEmptySelection
@@ -175,7 +177,7 @@ func (s *UserService) SetRoleBatch(ctx context.Context, ids []int64, role string
 	return err
 }
 
-func (s *UserService) SetStatusBatch(ctx context.Context, ids []int64, status string) error {
+func (s *UserService) SetStatusBatch(ctx context.Context, ids []string, status string) error {
 	status = strings.TrimSpace(status)
 	if len(ids) == 0 {
 		return ErrUserEmptySelection
@@ -192,12 +194,12 @@ func (s *UserService) SetStatusBatch(ctx context.Context, ids []int64, status st
 	return err
 }
 
-func (s *UserService) MarkLogin(ctx context.Context, id int64) error {
+func (s *UserService) MarkLogin(ctx context.Context, id string) error {
 	_, err := s.store.UpdateUserLastLogin(ctx, id, time.Now().UTC())
 	return err
 }
 
-func (s *UserService) DeleteBatch(ctx context.Context, ids []int64) error {
+func (s *UserService) DeleteBatch(ctx context.Context, ids []string) error {
 	if len(ids) == 0 {
 		return ErrUserEmptySelection
 	}

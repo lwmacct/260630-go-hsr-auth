@@ -18,7 +18,7 @@ type AdminCreateUserInputDTO struct {
 
 type AdminUpdateUserInputDTO struct {
 	Session string `cookie:"web_session"`
-	ID      int64  `path:"id"`
+	ID      string `path:"id"`
 	Body    AdminUpdateUserDTO
 }
 
@@ -43,7 +43,7 @@ type AdminBatchDeleteInputDTO struct {
 }
 
 type AdminUserDTO struct {
-	ID          int64      `json:"id"`
+	ID          string     `json:"id"`
 	Username    string     `json:"username"`
 	DisplayName string     `json:"displayName"`
 	Email       string     `json:"email,omitempty"`
@@ -80,20 +80,20 @@ type AdminUpdateUserDTO struct {
 }
 
 type AdminBatchRoleDTO struct {
-	IDs  []int64 `json:"ids"`
-	Role string  `json:"role"`
+	IDs  []string `json:"ids"`
+	Role string   `json:"role"`
 }
 
 type AdminBatchStatusDTO struct {
-	IDs    []int64 `json:"ids"`
-	Status string  `json:"status"`
+	IDs    []string `json:"ids"`
+	Status string   `json:"status"`
 }
 
 type AdminBatchPasswordDTO struct {
-	IDs      []int64 `json:"ids"`
-	Password string  `json:"password"`
+	IDs      []string `json:"ids"`
+	Password string   `json:"password"`
 }
 
 type AdminBatchIDsDTO struct {
-	IDs []int64 `json:"ids"`
+	IDs []string `json:"ids"`
 }

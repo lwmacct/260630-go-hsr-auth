@@ -4,7 +4,7 @@ import "time"
 
 type AuthSessionCreate struct {
 	TokenHash     []byte
-	UserID        int64
+	UserID        string
 	LoginIP       string
 	LastIP        string
 	UserAgentHash []byte
@@ -15,7 +15,7 @@ type AuthSessionCreate struct {
 
 type AuthSessionRow struct {
 	TokenHash     []byte
-	UserID        int64
+	UserID        string
 	LoginIP       string
 	LastIP        string
 	UserAgentHash []byte

@@ -6,7 +6,7 @@ import (
 )
 
 type AdminUser struct {
-	ID          int64
+	ID          string
 	Username    string
 	DisplayName string
 	Email       string
@@ -73,7 +73,7 @@ func utilAdminUser(user User, runtimeAdmin bool) AdminUser {
 	}
 }
 
-func validateAdminUserSelection(actorID int64, ids []int64) error {
+func validateAdminUserSelection(actorID string, ids []string) error {
 	if len(ids) == 0 {
 		return ErrAdminUserEmptySelection
 	}

@@ -8,7 +8,7 @@ import (
 const AuthSessionDefaultTTL = 7 * 24 * time.Hour
 
 type AuthSessionUser struct {
-	ID        int64
+	ID        string
 	Username  string
 	Admin     bool
 	ExpiresAt time.Time

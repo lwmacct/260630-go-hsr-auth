@@ -8,6 +8,7 @@ import (
 )
 
 type UserCreate struct {
+	ID          string
 	Username    string
 	DisplayName string
 	Email       string
@@ -19,7 +20,7 @@ type UserCreate struct {
 }
 
 type UserRow struct {
-	ID          int64
+	ID          string
 	Username    string
 	DisplayName string
 	Email       string

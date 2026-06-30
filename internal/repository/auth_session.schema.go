@@ -11,7 +11,7 @@ type AuthSessionModel struct {
 	bun.BaseModel `bun:"table:auth_sessions,alias:as"`
 
 	TokenHash     []byte     `bun:"token_hash,pk"`
-	UserID        int64      `bun:"user_id,notnull"`
+	UserID        string     `bun:"user_id,type:uuid,notnull"`
 	LoginIP       string     `bun:"login_ip,notnull"`
 	LastIP        string     `bun:"last_ip,notnull"`
 	UserAgentHash []byte     `bun:"user_agent_hash,notnull"`
